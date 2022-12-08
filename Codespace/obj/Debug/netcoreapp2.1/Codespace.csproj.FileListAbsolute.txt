@@ -1,0 +1,11 @@
+C:\Users\chand\source\repos\Codespace\Codespace\bin\Debug\netcoreapp2.1\Codespace.deps.json
+C:\Users\chand\source\repos\Codespace\Codespace\bin\Debug\netcoreapp2.1\Codespace.runtimeconfig.json
+C:\Users\chand\source\repos\Codespace\Codespace\bin\Debug\netcoreapp2.1\Codespace.runtimeconfig.dev.json
+C:\Users\chand\source\repos\Codespace\Codespace\bin\Debug\netcoreapp2.1\Codespace.dll
+C:\Users\chand\source\repos\Codespace\Codespace\bin\Debug\netcoreapp2.1\Codespace.pdb
+C:\Users\chand\source\repos\Codespace\Codespace\obj\Debug\netcoreapp2.1\Codespace.csprojAssemblyReference.cache
+C:\Users\chand\source\repos\Codespace\Codespace\obj\Debug\netcoreapp2.1\Codespace.csproj.CoreCompileInputs.cache
+C:\Users\chand\source\repos\Codespace\Codespace\obj\Debug\netcoreapp2.1\Codespace.AssemblyInfoInputs.cache
+C:\Users\chand\source\repos\Codespace\Codespace\obj\Debug\netcoreapp2.1\Codespace.AssemblyInfo.cs
+C:\Users\chand\source\repos\Codespace\Codespace\obj\Debug\netcoreapp2.1\Codespace.dll
+C:\Users\chand\source\repos\Codespace\Codespace\obj\Debug\netcoreapp2.1\Codespace.pdb
