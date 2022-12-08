@@ -15,15 +15,6 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
-
-- script: |
-     npm install
-  displayName: 'npm install and test'
-
 - script: |
     wget https://github.com/github/codeql-action/releases/download/codeql-bundle-20221202/codeql-bundle-win64.tar.gz
     chmod +x codeql-bundle-win64.tar.gz
