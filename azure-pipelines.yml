@@ -16,18 +16,6 @@ variables:
 
 steps:
 - script: |
-    ./codeql-runner-linux init \
-    --repository chandrasekarMariappan/sa\
-    --github-url https://github.com\
-    --github-auth $(cicd) \
-    --config-file .github/workflows/codeql.yml 
-  displayName: 'Initialize CodeQL Executable and create a CodeQL database'
-  
-- script: |
-    ./codeql-runner-linux analyze \
-    --repository chandrasekarMariappan/sa\
-    --github-url https://github.com \
-    --github-auth $(cicd) \
-    --commit $(Build.SourceVersion) \
-    --ref $(Build.SourceBranch)
-  displayName: 'Populate the CodeQL runner databases, analyze them, and upload the results to GitHub.'
+    wget https://github.com/github/codeql-action/releases/download/codeql-bundle-20221202/codeql-bundle-win64.tar.gz
+    chmod +x codeql-bundle-win64.tar.gz
+  displayName: 'Get latest CodeQL package. Install on Agent.'
