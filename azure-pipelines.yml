@@ -25,8 +25,8 @@ steps:
   displayName: 'npm install and test'
 
 - script: |
-    wget https://github.com/github/codeql-action/releases/latest/download/codeql-runner-windows
-    chmod +x codeql-runner-winodws
+    wget https://github.com/github/codeql-action/releases/download/codeql-bundle-20221202/codeql-bundle-win64.tar.gz
+    chmod +x codeql-bundle-win64.tar.gz
   displayName: 'Get latest CodeQL package. Install on Agent.'
 
 - script: |
