@@ -19,8 +19,8 @@ steps:
     ./codeql-runner-linux init \
     --repository chandrasekarMariappan/sa\
     --github-url https://github.com\
-    --github-auth $(GITHUB_PAT) \
-    --config-file .github/codeql/codeql-config.yml 
+    --github-auth $(cicd) \
+    --config-file .github/workflows/codeql.yml 
   displayName: 'Initialize CodeQL Executable and create a CodeQL database'
   
 - script: |
