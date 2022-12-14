@@ -24,7 +24,7 @@ steps:
 - task: CmdLine@1
   displayName: Initialize CodeQL database
   inputs:
-      script: "codeql database init --language csharp --trace-process-name Agent.Worker.exe --source-root . --begin-tracing /codeql-dbs/example-repo"
+   script: "codeql database init --language csharp --trace-process-name Agent.Worker.exe --source-root . --begin-tracing /codeql-dbs/example-repo"
 
 - task: PowerShell@1
   displayName: Set CodeQL environment variables
@@ -40,9 +40,9 @@ steps:
              echo "$template"
          }
 
-- # Execute the pre-defined build step. Note the `msbuildArgs` variable.
+
 - task: VSBuild@1
-    inputs:
+  inputs:
       solution: '**/*.sln'
       # Disable MSBuild shared compilation for C# builds.
       msbuildArgs: /p:OutDir=$(Build.ArtifactStagingDirectory) /p:UseSharedCompilation=false
@@ -50,15 +50,15 @@ steps:
       configuration: Release
       # Execute a clean build, in order to remove any existing build artifacts prior to the build.
       clean: True
-   displayName: Visual Studio Build
+  displayName: Visual Studio Build
 
 # Read and set the generated environment variables to end build tracing. This is done in PowerShell in this example.
 - task: PowerShell@1
-   displayName: Clear CodeQL environment variables
-   inputs:
-      targetType: inline
-      script: >
-         $json = Get-Content $(System.DefaultWorkingDirectory)/db/temp/tracingEnvironment/end-tracing.json | ConvertFrom-Json
+  displayName: Clear CodeQL environment variables
+  inputs:
+   targetType: inline
+   script: >
+        $json = Get-Content $(System.DefaultWorkingDirectory)/db/temp/tracingEnvironment/end-tracing.json | ConvertFrom-Json
          $json.PSObject.Properties | ForEach-Object {
              $template = "##vso[task.setvariable variable="
              $template += $_.Name
@@ -69,19 +69,19 @@ steps:
 
 # Use `codeql database finalize` to complete database creation after the build is done.
 - task: CmdLine@2
-   displayName: Finalize CodeQL database
-   inputs:
-      script: 'codeql database finalize /codeql-dbs/example-repo'
+  displayName: Finalize CodeQL database
+  inputs:
+   script: 'codeql database finalize /codeql-dbs/example-repo'
 
 # Analyze the database and upload the results.
 - task: CmdLine@2
-   displayName: Analyze CodeQL database
-   inputs:
+  displayName: Analyze CodeQL database
+  inputs:
       script: 'codeql database analyze /codeql-dbs/example-repo csharp-code-scanning.qls --sarif-category=csharp --format=sarif-latest --output=/temp/example-repo-csharp.sarif'
 
 - task: CmdLine@2
-   displayName: Upload CodeQL results
-   inputs:
+  displayName: Upload CodeQL results
+  inputs:
       script: 'echo "$TOKEN" | codeql github upload-results --repository=my-org/example-repo \
     --ref=refs/heads/main --commit=deb275d2d5fe9a522a0b7bd8b6b6a1c939552718 \
     --sarif=/temp/example-repo-csharp.sarif --github-auth-stdin'
