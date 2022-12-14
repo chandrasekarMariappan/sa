@@ -42,15 +42,12 @@ steps:
 
 
 - task: VSBuild@1
+  displayName: Build
   inputs:
-      solution: '**/*.sln'
-      # Disable MSBuild shared compilation for C# builds.
-      msbuildArgs: /p:OutDir=$(Build.ArtifactStagingDirectory) /p:UseSharedCompilation=false
-      platform: Any CPU
-      configuration: Release
-      # Execute a clean build, in order to remove any existing build artifacts prior to the build.
-      clean: True
-  displayName: Visual Studio Build
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
 
 # Read and set the generated environment variables to end build tracing. This is done in PowerShell in this example.
 - task: PowerShell@1
