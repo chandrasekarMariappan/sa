@@ -24,13 +24,13 @@ steps:
 - task: CmdLine@1
   displayName: CodeQL Initialization
   inputs:
-  script: "%CodeQLRunner%\\codeql-runner-win.exe init --repository my-org/example-repo --languages csharp --github-url https://github.com --github-auth $(Token)"
+    script: "%CodeQLRunner%\\codeql-runner-win.exe init --repository my-org/example-repo --languages csharp --github-url https://github.com --github-auth $(Token)"
 # Set the generated environment variables so they are available for subsequent commands, in the format required by Azure Pipelines.
 - task: PowerShell@1
   displayName: Set CodeQL Environment Variables
   inputs:
-      targetType: inline
-      script: >
+   targetType: inline
+   script: >
           $json = Get-Content $(System.DefaultWorkingDirectory)/codeql-runner/codeql-env.json | ConvertFrom-Json
           $json.PSObject.Properties | ForEach-Object {
               $template = "##vso[task.setvariable variable="
