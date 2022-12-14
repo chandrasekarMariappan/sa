@@ -22,64 +22,36 @@ steps:
     restoreSolution: '$(solution)'
 
 - task: CmdLine@1
-  displayName: Initialize CodeQL database
+  displayName: CodeQL Initialization
   inputs:
-   script: "codeql database init --language csharp --trace-process-name Agent.Worker.exe --source-root . --begin-tracing /codeql-dbs/example-repo"
-
+  script: "%CodeQLRunner%\\codeql-runner-win.exe init --repository my-org/example-repo --languages csharp --github-url https://github.com --github-auth $(Token)"
+# Set the generated environment variables so they are available for subsequent commands, in the format required by Azure Pipelines.
 - task: PowerShell@1
-  displayName: Set CodeQL environment variables
+  displayName: Set CodeQL Environment Variables
   inputs:
       targetType: inline
       script: >
-         $json = Get-Content /codeql-dbs/example-repo/temp/tracingEnvironment/start-tracing.json | ConvertFrom-Json
-         $json.PSObject.Properties | ForEach-Object {
-             $template = "##vso[task.setvariable variable="
-             $template += $_.Name
-             $template += "]"
-             $template += $_.Value
-             echo "$template"
-         }
+          $json = Get-Content $(System.DefaultWorkingDirectory)/codeql-runner/codeql-env.json | ConvertFrom-Json
+          $json.PSObject.Properties | ForEach-Object {
+              $template = "##vso[task.setvariable variable="
+              $template += $_.Name
+              $template += "]"
+              $template += $_.Value
+              echo "$template"
+          }
 
-
+# Execute a clean build using the VSBuild task.
 - task: VSBuild@1
-  displayName: Build
   inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+      solution: '**/*.sln'
+      msbuildArgs: '/p:OutDir=$(Build.ArtifactStagingDirectory) /p:UseSharedCompilation=false'
+      platform: Any CPU
+      configuration: Release
+      clean: True
+  displayName: Visual Studio Build
 
-# Read and set the generated environment variables to end build tracing. This is done in PowerShell in this example.
-- task: PowerShell@1
-  displayName: Clear CodeQL environment variables
-  inputs:
-   targetType: inline
-   script: >
-        $json = Get-Content $(System.DefaultWorkingDirectory)/db/temp/tracingEnvironment/end-tracing.json | ConvertFrom-Json
-         $json.PSObject.Properties | ForEach-Object {
-             $template = "##vso[task.setvariable variable="
-             $template += $_.Name
-             $template += "]"
-             $template += $_.Value
-             echo "$template"
-         }
-
-# Use `codeql database finalize` to complete database creation after the build is done.
+# Analyze the database created as part of the build, by running the selected queries against it, and upload results to GitHub.
 - task: CmdLine@2
-  displayName: Finalize CodeQL database
+  displayName: CodeQL Analyze
   inputs:
-   script: 'codeql database finalize /codeql-dbs/example-repo'
-
-# Analyze the database and upload the results.
-- task: CmdLine@2
-  displayName: Analyze CodeQL database
-  inputs:
-      script: 'codeql database analyze /codeql-dbs/example-repo csharp-code-scanning.qls --sarif-category=csharp --format=sarif-latest --output=/temp/example-repo-csharp.sarif'
-
-- task: CmdLine@2
-  displayName: Upload CodeQL results
-  inputs:
-      script: 'echo "$TOKEN" | codeql github upload-results --repository=my-org/example-repo \
-    --ref=refs/heads/main --commit=deb275d2d5fe9a522a0b7bd8b6b6a1c939552718 \
-    --sarif=/temp/example-repo-csharp.sarif --github-auth-stdin'
-
+      script: '%CodeQLRunner%\codeql-runner-win.exe analyze --repository my-org/example-repo --commit $(Build.SourceVersion) --ref $(Build.SourceBranch) --github-url https://github.com --github-auth $(Token)'
