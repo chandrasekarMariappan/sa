@@ -12,11 +12,7 @@ variables:
 stages:
 - stage: __default
   jobs:
-  - job: Job
-    pool:
-      name: PECOE-self-hosted
-      demands:
-      - Agent.Name -equals AAMEAD1CUWDA02
+    pool:'windows-latest'
     steps:
     - task: PowerShell@2
       displayName: 'Download Codeql CLI package'
