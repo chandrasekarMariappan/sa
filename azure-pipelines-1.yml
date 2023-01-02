@@ -13,7 +13,8 @@ stages:
 - stage: __default
   jobs:
   - job: Job
-    pool:'Windows-latest'
+    pool:
+      vmImage: 'Windows-latest'
     steps:
     - task: PowerShell@2
       displayName: 'Download Codeql CLI package'
