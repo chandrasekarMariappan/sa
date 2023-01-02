@@ -21,6 +21,14 @@ stages:
       displayName: 'Restore packages'
       inputs:
        restoreSolution: '$(solution)'
+    - task: DotNetCoreCLI@2
+      displayName: dotnet restore
+      inputs:
+       command: restore                      ## The dotnet command to run. Options: build, push, pack, restore, run, test, and custom.
+       projects: '**/*.csproj'               ## Path to your csproj file
+       feedsToUse: 'select'                  ## Options: select, config
+       vstsFeed: '<projectName>/<feedName>'  ## Required when feedsToUse == Select
+       includeNuGetOrg: true                 ## Use packages from NuGet.org
     - task: PowerShell@2
       displayName: 'Download Codeql CLI package'
       inputs:
