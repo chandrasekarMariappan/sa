@@ -12,7 +12,9 @@ variables:
 stages:
 - stage: __default
   jobs:
-    pool:'windows-latest'
+  - job: Job
+    pool:
+      name: Windows-latest
     steps:
     - task: PowerShell@2
       displayName: 'Download Codeql CLI package'
