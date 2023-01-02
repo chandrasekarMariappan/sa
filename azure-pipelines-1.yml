@@ -16,6 +16,10 @@ stages:
     pool:
       vmImage: 'Windows-latest'
     steps:
+    - task: NuGetCommand@2
+      displayName: 'Restore packages'
+      inputs:
+       restoreSolution: '$(solution)'
     - task: PowerShell@2
       displayName: 'Download Codeql CLI package'
       inputs:
